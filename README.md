@@ -48,4 +48,4 @@ Added Buttons: In the main screen, I created three ElevatedButton.icon widgets f
 Set Different Colors for Each Button: Used the style property in each button to set a distinct color. The colors chosen were blue for the View Product List button, green for the Add Product button, and red for the Logout button.
 Displayed Snackbars: Added ScaffoldMessenger.of(context).showSnackBar to each buttons onPressed function, showing a SnackBar with a message specific to each button press.
 Documentation in README.md: Documented answers to the questions provided, including explanations of widgets, keywords, and implementation steps.
-Pushed to GitHub: Added, committed, and pushed the project files to GitHub for easy submission and version control.
+Pushed to GitHub: Added, committed, and pushed the project files to GitHub for easy submission and version control
