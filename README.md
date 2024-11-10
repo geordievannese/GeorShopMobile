@@ -49,3 +49,101 @@ Set Different Colors for Each Button: Used the style property in each button to 
 Displayed Snackbars: Added ScaffoldMessenger.of(context).showSnackBar to each buttons onPressed function, showing a SnackBar with a message specific to each button press.
 Documentation in README.md: Documented answers to the questions provided, including explanations of widgets, keywords, and implementation steps.
 Pushed to GitHub: Added, committed, and pushed the project files to GitHub for easy submission and version control
+
+## ASSIGNMENT 8
+
+# 1.What is the purpose of const in Flutter? Explain the advantages of using const in Flutter code. When should we use const, and when should it not be used?
+
+Purpose: In Flutter, const is used to create compile-time constants. When an object is declared as const, it is evaluated at compile time, which allows Flutter to optimize and reduce memory usage by reusing the same instance across the application wherever it's used.
+
+Advantages of Using const:
+Performance Optimization: Since const objects are immutable and evaluated at compile time, they save memory and improve performance.
+Reduced Widget Rebuilds: Widgets declared as const won’t rebuild unnecessarily, leading to better performance, especially in large apps with many widgets.
+Improved Code Readability: Using const helps developers indicate that certain widgets or objects are immutable, which enhances readability and code structure.
+When to Use const:
+
+Use const for widgets and objects that don’t need to change during the app's lifecycle, like static text or icons.
+Use const in layout widgets where children or properties remain the same.
+When Not to Use const:
+
+Do not use const if the widget or object needs to change at runtime. If the properties or values will be updated, using const will throw an error.
+
+# 2.Explain and compare the usage of Column and Row in Flutter. Provide example implementations of each layout widget!
+
+Column: Column is a layout widget that arranges its children in a vertical direction. It’s ideal for stacking widgets on top of each other.
+
+Example:
+Column(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Text("Item 1"),
+    Text("Item 2"),
+    Text("Item 3"),
+  ],
+);
+
+Row: Row is a layout widget that arranges its children horizontally. It’s useful for placing widgets side by side.
+
+Example:
+Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Icon(Icons.home),
+    Icon(Icons.search),
+    Icon(Icons.settings),
+  ],
+);
+
+Comparison:
+Axis: Column arranges widgets vertically, while Row arranges them horizontally.
+Properties: Both have similar properties, like mainAxisAlignment and crossAxisAlignment, to control the alignment of children along their respective axes.
+Spacing: Use SizedBox or Padding between children in both Column and Row to add spacing.
+
+# 3.List the input elements you used on the form page in this assignment. Are there other Flutter input elements you didn’t use in this assignment? Explain!
+
+Input Elements Used:
+
+TextFormField: Used for entering text-based data (like name and description).
+TextInputType.number (for numeric input in TextFormField): Used for entering numbers (like amount).
+
+Other Input Elements Not Used:
+Checkbox: A square box used for selecting multiple options.
+Radio: A circular button used for selecting one option from a set.
+Switch: A toggle switch used for binary options like on/off.
+Slider: Allows the user to select a value from a continuous or discrete range.
+DropdownButton: Displays a dropdown list from which users can select a single item.
+
+# 4. How do you set the theme within a Flutter application to ensure consistency? Did you implement a theme in your application?
+Use the ThemeData class in the MaterialApp widget. A theme allows you to define colors, font styles, and widget styles centrally, which ensures consistency and easy maintenance.
+
+Example:
+MaterialApp(
+  theme: ThemeData(
+    primarySwatch: Colors.blue,
+    textTheme: TextTheme(
+      bodyText1: TextStyle(fontSize: 18, color: Colors.black),
+    ),
+    buttonTheme: ButtonThemeData(
+      buttonColor: Colors.blueAccent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+    ),
+  ),
+  home: HomeScreen(),
+);
+
+Yes, I did apply a theme to my Flutter application.
+1. ThemeData in MaterialApp:
+- defined a theme in the MaterialApp widget using ThemeData.
+- primarySwatch: Colors.blue: sets a default color scheme based on blue shades for widgets that depend on the primary color (such as the AppBar).
+- scaffoldBackgroundColor: Colors.grey[100]: Sets a light grey background color for all Scaffold widgets throughout the app, which ensures consistency in the app’s background color.
+
+2. Specific Customizations:
+- In the AppBar, I used backgroundColor: Colors.blue[900] to override the primary color with a darker shade of blue specifically for the header.
+- I also also set iconTheme: IconThemeData(color: Colors.white) and customized the Text color in the AppBar to Colors.white for the title and icon, aligning them with the header background color.
+
+# 5. How do you manage navigation in a multi-page Flutter application?
+- Navigator.push and Navigator.pop: Used to move to a new page and return to the previous page.
+- Navigator.pushReplacement: Replaces the current page with a new one, removing the current page from the stack.
+- Named Routes: Define routes in the MaterialApp to manage navigation more cleanly. Named routes provide a centralized way of managing all routes in one place.
