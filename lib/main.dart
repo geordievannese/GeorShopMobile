@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'add_item_page.dart'; 
+import 'screens/add_item_page.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -135,12 +135,12 @@ class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const CustomButton({
-    Key? key,
+    super.key,
     required this.color,
     required this.icon,
     required this.label,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
