@@ -13,7 +13,6 @@ class ItemHomepage {
 }
 
 class ItemCard extends StatelessWidget {
-  // Display the card with an icon and name.
   final ItemHomepage item;
 
   const ItemCard(this.item, {super.key});
@@ -22,19 +21,30 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
 
+    // Determine the background color based on the button name
+    Color getBackgroundColor(String name) {
+      if (name == "View Product") {
+        return Colors.blue;
+      } else if (name == "Add Product") {
+        return Colors.red;
+      } else if (name == "Logout") {
+        return Colors.orange;
+      } else {
+        return Theme.of(context).colorScheme.secondary;
+      }
+    }
+
     return Material(
-      color: Theme.of(context).colorScheme.secondary,
+      color: getBackgroundColor(item.name),
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: () async {
-          // Display the SnackBar message when the card is pressed.
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(content: Text("You have pressed the ${item.name} button!")),
             );
 
-          // Navigate to the appropriate route (depending on the button type)
           if (item.name == "Add Product") {
             Navigator.pushReplacement(
               context,
@@ -50,9 +60,8 @@ class ItemCard extends StatelessWidget {
               ),
             );
           } else if (item.name == "Logout") {
-            // Handle logout process
             final response = await request.logout(
-              "http://127.0.0.1:8000/auth/logout/", // Update this URL if needed
+              "http://127.0.0.1:8000/auth/logout/",
             );
             String message = response["message"];
 
@@ -78,12 +87,10 @@ class ItemCard extends StatelessWidget {
             }
           }
         },
-        // Container to store the Icon and Text
         child: Container(
           padding: const EdgeInsets.all(8),
           child: Center(
             child: Column(
-              // Place the Icon and Text in the center of the card.
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
