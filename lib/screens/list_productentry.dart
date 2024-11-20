@@ -36,7 +36,7 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product Catalog'),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.blue,
       ),
       drawer: const LeftDrawer(),
       body: FutureBuilder<List<ProductEntry>>(
@@ -46,7 +46,7 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
             // Loading state
             return const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
               ),
             );
           } else if (snapshot.hasError) {
@@ -63,12 +63,12 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
             );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             // No data state
-            return Center(
+            return const Center(
               child: Text(
                 'No products available in the catalog.',
                 style: TextStyle(
                   fontSize: 20,
-                  color: Colors.deepPurple.shade300,
+                  color: Colors.blue,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -91,12 +91,12 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
                     child: ListTile(
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 10),
-                      leading: CircleAvatar(
+                      leading: const CircleAvatar(
                         radius: 30,
-                        backgroundColor: Colors.deepPurple.shade50,
+                        backgroundColor: Colors.blue,
                         child: Icon(
                           Icons.shopping_bag,
-                          color: Colors.deepPurple,
+                          color: Colors.blue,
                           size: 30,
                         ),
                       ),
@@ -105,7 +105,7 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.deepPurple,
+                          color: Colors.blue,
                         ),
                       ),
                       subtitle: Padding(
@@ -134,7 +134,7 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
                       // Trailing icon to indicate navigation
                       trailing: const Icon(
                         Icons.arrow_forward_ios,
-                        color: Colors.deepPurple,
+                        color: Colors.blue,
                       ),
                       // Make the entire ListTile tappable
                       onTap: () {
