@@ -56,7 +56,7 @@ class ItemCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const ProductListPage(),
+                builder: (context) => const ProductEntryPage(),
               ),
             );
           } else if (item.name == "Logout") {

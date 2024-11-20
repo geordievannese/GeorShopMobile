@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:georshop/models/product_entry.dart';
+import 'package:georshop/screens/product_detail_page.dart';
 import 'package:georshop/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -11,31 +12,15 @@ class ProductEntryPage extends StatefulWidget {
   State<ProductEntryPage> createState() => _ProductEntryPageState();
 }
 
-class ProductListPage extends StatelessWidget {
-  const ProductListPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Product List'),
-      ),
-      body: const Center(
-        child: Text('Product List Page'),
-      ),
-    );
-  }
-}
-
 class _ProductEntryPageState extends State<ProductEntryPage> {
   Future<List<ProductEntry>> fetchProducts(CookieRequest request) async {
-
+    // Ensure the trailing slash is present
     final response = await request.get('http://127.0.0.1:8000/products/json/');
 
-    // Decoding the response into JSON
+    // Decode the response into JSON
     var data = response;
 
-    // Convert json data to a ProductEntry object
+    // Convert JSON data to a list of ProductEntry objects
     List<ProductEntry> productList = [];
     for (var d in data) {
       if (d != null) {
@@ -50,54 +35,123 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
     final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product Entry List'),
+        title: const Text('Product Catalog'),
+        backgroundColor: Colors.deepPurple,
       ),
       drawer: const LeftDrawer(),
-      body: FutureBuilder(
+      body: FutureBuilder<List<ProductEntry>>(
         future: fetchProducts(request),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return const Center(child: CircularProgressIndicator());
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Loading state
+            return const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            // Error state
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'An error occurred:\n${snapshot.error}',
+                  style: const TextStyle(fontSize: 18, color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            // No data state
+            return Center(
+              child: Text(
+                'No products available in the catalog.',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.deepPurple.shade300,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            );
           } else {
-            if (!snapshot.hasData) {
-              return const Column(
-                children: [
-                  Text(
-                    'There is no product data in GeorShop.',
-                    style: TextStyle(fontSize: 20, color: Color(0xff59A5D8)),
-                  ),
-                  SizedBox(height: 8),
-                ],
-              );
-            } else {
-              return ListView.builder(
+            // Data loaded successfully
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
                 itemCount: snapshot.data!.length,
-                itemBuilder: (_, index) => Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${snapshot.data![index].fields.name}",
-                        style: const TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
+                itemBuilder: (context, index) {
+                  final product = snapshot.data![index].fields;
+                  return Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      leading: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.deepPurple.shade50,
+                        child: Icon(
+                          Icons.shopping_bag,
+                          color: Colors.deepPurple,
+                          size: 30,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Text("Description: ${snapshot.data![index].fields.description}"),
-                      const SizedBox(height: 10),
-                      Text("Price: \$${snapshot.data![index].fields.price}"),
-                      const SizedBox(height: 10),
-                      Text("Added at: ${snapshot.data![index].fields.time}")
-                    ],
-                  ),
-                ),
-              );
-            }
+                      title: Text(
+                        product.name,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              product.description,
+                              style: const TextStyle(fontSize: 14),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Price: \$${product.price.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Trailing icon to indicate navigation
+                      trailing: const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.deepPurple,
+                      ),
+                      // Make the entire ListTile tappable
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetailPage(
+                              product: snapshot.data![index],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            );
           }
         },
       ),
